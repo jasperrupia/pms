@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html dir="ltr">
+	{% load static %}
+
+<head>
+    {% include 'layout/head.html' %}
+</head>
+
+<body>
+	<div class="main-wrapper">
+		<!-- ============================================================== -->
+		<!-- Preloader - style you can find in spinners.css -->
+		<!-- ============================================================== -->
+		<div class="preloader">
+			<div class="loader">
+				<div class="loader__figure"></div>
+				<p class="loader__label"> PMS </p>
+			</div>
+		</div>
+
+
+		<!-- ============================================================== -->
+		<!-- Login box -->
+		<!-- ============================================================== -->
+		<div class="d-flex no-block justify-content-center align-items-center">
+			<div>
+
+				<div class="text-center pt-4 pb-4">
+					<span class="db"><img src="{% static 'assets/pms-logo.jpg' %}" width="170"/></span>
+				</div>
+
+				<form class="mt-3" method="POST" id="loginform" action="registerUser">
+					{% for message in messages|slice:":1" %}
+						<div class="alert alert-danger text-center" role="alert">
+							{{ message }}
+						</div>
+					{% endfor %}
+					
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-12">
+							
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text bg-success text-white h-100"><i class="mdi mdi-account mdi-24px"></i></span>
+								</div>
+								<input type="email" name="email" class="form-control form-control-lg" placeholder="email" required=""/>
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text bg-success text-white h-100"><i class="mdi mdi-account mdi-24px"></i></span>
+								</div>
+								<input type="text" name="username" class="form-control form-control-lg" placeholder="username" required=""/>
+							</div>
+							<div class="input-group mb-3">
+								<div class="input-group-prepend">
+									<span class="input-group-text bg-warning text-white h-100"><i class="mdi mdi-lock mdi-24px"></i></span>
+								</div>
+								<input type="password" name="password" class="form-control form-control-lg" placeholder="Password" required=""/>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-12">
+							<div class="form-group">
+								<div>
+									<button class="btn btn-success float-end text-white" type="submit"> Create account </button>
+								</div>
+							</div>
+							<br>
+							
+						</div>
+					</div>
+				</form>
+
+				
+			</div>
+		</div>
+		<!-- ============================================================== -->
+		<!-- Login box -->
+		<!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- All Required js -->
+    <!-- ============================================================== -->
+	{% include 'layout/scripts.html' %}
+
+
+</body>
+</html>

@@ -1,0 +1,74 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+
+{% block 'addedCSS' %} 
+<link rel="stylesheet" href="{% static 'plugins/multicheck/multicheck.css' %}">
+<link href="{% static 'plugins/DataTables/datatables.css' %}" rel="stylesheet">
+{% endblock%} 
+
+{% block 'preload' %} PMS {% endblock %}
+    
+{% block 'bigHead' %} Sales / <span style="color: #687384;"> Records </span> {% endblock %}
+
+{% block 'main' %}
+<div class="row">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title"> All Sales here
+                <!-- <span class="float-end">
+                    <a href="./page_sell.html" class="btn-sm btn-primary mx-2"> <i class="mdi mdi-plus"></i> Add sales </a>
+                    <a href="javascript:void(0)" class="btn-sm btn-danger"> <i class="mdi mdi-delete"></i> Delete </a>
+                </span> -->
+            </h5>
+            <div class="table-responsive">
+                <table id="zero_config" class="table table-striped table-bordered text-center">
+                    <thead>
+                        <tr>
+                            <th> Invoice#</th>
+                            <th> Customer </th>
+                            <th> Contact </th>
+                            <th> #Items </th>
+                            <th> Amount </th>
+                            <th> By </th>
+                            <th> Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instance in sales_records %}
+                        <tr>
+                            <td> {{ instance.invoice }} </td>
+                            <td> {{ instance.customer }} </td>
+                            <td> {{ instance.contact }} </td>
+                            <td> {{ instance.items }} </td>
+                            <td> {{ instance.total_amount }} </td>
+                            <td> {{ instance.trans_by }} </td>
+                            <td> {{ instance.trans_date }} </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th> Invoice#</th>
+                            <th> Customer </th>
+                            <th> Contact </th>
+                            <th> Items </th>
+                            <th> Amount </th>
+                            <th> By </th>
+                            <th> Date </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock%} 
+
+{% block 'addedScripts' %}                          
+<script src="{% static 'plugins/multicheck/datatable-checkbox-init.js' %}"></script>
+<script src="{% static 'plugins/multicheck/jquery.multicheck.js' %}"></script>
+<!-- Data table -->
+<script src="{% static 'plugins/DataTables/datatables.js' %}"></script>
+<script>    $("#zero_config").DataTable();    </script>
+{% endblock%} 

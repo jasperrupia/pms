@@ -1,0 +1,101 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+
+{% block 'addedCSS' %} 
+<link rel="stylesheet" href="{% static 'plugins/multicheck/multicheck.css' %}">
+{% endblock %}
+
+{% block 'preload' %} PMS {% endblock %}
+    
+{% block 'bigHead' %} Medicine / <span style="color: #687384;"> Categories </span> {% endblock %}
+
+{% block 'main' %}
+<div class="row">
+    
+    {% if pharmacy_value < 1 %}
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </symbol>
+    </svg>
+    <div class="alert alert-primary d-flex align-items-center text-center" role="alert">
+        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+        <div>
+            {% if user.title == 'owner' %}
+            INITIATE PHARMACY FIRST <a href="pharmacy"> >> <strong> HERE YOU GO </strong> << </a>
+            {% else %}
+            THE OWNER SHOULD INITIATE PHARMACY FIRST
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+
+    <div class="card-body">
+        <span class="float-end">
+            <button type="submit" form="del-form" class="btn-sm btn-danger float-end"> <i class="mdi mdi-delete"></i> Delete </button>
+            <a href="javascript:void(0)" class="btn-sm btn-primary float-end mx-2" data-bs-toggle="modal" data-bs-target="#add-category"> <i class="mdi mdi-plus"></i> Add new </a>
+        </span>
+    </div>
+    <!-- Vertically centered modal 1 -->
+    <div class="modal fade" id="add-category" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-bold" id="exampleModalLabel"> Record new Medicine category </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body text-center">
+                    <form id="add-form" method="POST" action="addCategory" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <table>
+                            <tr>
+                                <th> category Name: </th>
+                                <td><input type="text" class="form-control my-2" name="category_name" required></td>
+                            </tr>
+                            <tr>
+                                <th> Image </th>
+                                <td><input type="file" name="category_image" class="form-control my-2" ></td>
+                            </tr>
+                        </table>     
+                    </form>
+                    <!-- end form table -->
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" form="add-form" class="btn btn-success waves-effect waves-light"> <i class="mdi mdi-check-bold"></i> Save </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form action="delCategory" id="del-form" method="GET">
+        <div class="row">
+            
+            <!-- Column -->
+            
+            {% for instance in medicines_in_each_category %}
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+                <div class="card box card-hover shadow">
+                    <span class="myCheckbox">
+                        <label class="customcheckbox"> <input type="checkbox" class="listCheckbox" value="{{ instance.id }}" name="category_id"/> <span class="checkmark"></span></label>
+                    </span>
+                    <div class="text-center"> <img src="media/{{ instance.image }}" style="width:155px; height: 122px;" class='img-thumbnail'></div>
+                    <div class="dropdown-divider"></div>
+                    <span>Name <span class="float-end text-info"> {{ instance.name }} </span></span>
+                    <div class="dropdown-divider"></div>
+                    <span> Available Qty <span class="float-end text-info"> {{ instance.medicines_in_category }} </span> </span>
+                </div>
+            </div>
+            {% endfor %}
+            
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock%}
+
+{% block 'addedScripts' %} 
+<script src="{% static 'plugins/multicheck/datatable-checkbox-init.js' %}"></script>
+<script src="{% static 'plugins/multicheck/jquery.multicheck.js' %}"></script>
+{% endblock%}        

@@ -1,0 +1,242 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+
+{% block 'preload' %} PMS {% endblock %}
+    
+{% block 'bigHead' %} Setting / <span style="color: #687384;"> Profile </span> {% endblock %}
+
+{% block 'main' %}
+<div class="row">
+    <!-- Column -->
+    <div class="col-lg-4 col-xlg-3">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                
+                <div class="mt-4 rounded-circle" style="width:200px; margin:auto; position:relative; overflow:hidden;"> 
+                    <img src="../media/{{ user.avata }}" width="200px">
+                    <!-- Button trigger modal -->
+                    <a href="javascript:void(0)" class="waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i class="mdi mdi-camera mdi-24px"></i>
+                    </a>
+                    <style>
+                        .row .card .card-body div a{ 
+                            height:50px; width:200px; padding-top: 7px; position:absolute; bottom:0; left:50%;
+                            transform:translateX(-50%); text-align:center; background-color:rgba(0, 0, 0, 0.45);
+                            color:white; border-top-left-radius:50%; border-top-right-radius: 50%;}
+                        .row .card .card-body div a:hover{ 
+                            height:70px; padding-top: 13px; border-top-left-radius:0; border-top-right-radius: 0;}
+                    </style>
+                </div>
+                <div class="justify-content-md-center">
+                    <h4 class="card-title mt-2"> {{ user.username }} </h4>
+                    <h6 class="card-subtitle"> {{ user.title }} </h6>
+                    <div>
+                        <i class="mdi mdi-sale"></i> 
+                        <span class="font-medium">*** * *** </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Column -->
+    <div class="col-lg-8 col-xlg-9">
+        <div class="card shadow-sm">
+            <!-- Tabs -->
+
+
+            <div class="card-body">
+                
+                {% for message in messages|slice:":1" %}
+                <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+                    </symbol>
+                </svg>
+                <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+                    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                    <strong> {{ message }} </strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-bs-toggle="tab" href="#info" role="tab" ><span class="hidden-sm-up"></span>
+                            Info 
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-bs-toggle="tab" href="#pass" role="tab"><span class="hidden-sm-up"></span>
+                            Password
+                        </a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content tabcontent-border">
+                    <div class="tab-pane pt-4 px-3 active" id="info" role="tabpanel">
+                        <form class="form-material" action="updProfile" method="GET">
+                            <div class="form-group">
+                                <label for="name"> Userame </label>
+                                <input type="text" value="{{ user.username }}" name="username" class="form-control" id="user-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email" class="col-md-12"> Email </label>
+                                <input type="email" value="{{ user.email }}" name="email" class="form-control" id="email" onchange="lowerCaseProfile()" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone"> Phone No </label>
+                                <input type="text" class="form-control phone-inputmask" value="{{ user.tel }}" name="tel" id="phone" />
+                            </div>
+                            <div class="form-group">
+                                <div class="float-end">
+                                    <button class="btn btn-success waves-effect waves-light"> <i class="mdi mdi-information-variant mdi-18px"></i> Update Info </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="tab-pane pt-4 px-3" id="pass" role="tabpanel">
+                        <form class="form-material" action="updPassword" method="POST">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="oldPassword"> Old password </label>
+                                <input type="password" name="oldPassword" class="form-control form-control-line" id="oldPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword"> New password </label>
+                                <input type="password" name="newPassword" class="form-control form-control-line" id="newPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword"> Confirm password </label>
+                                <input type="password" name="confirmPassword" class="form-control form-control-line" id="confirmPassword" required>
+                            </div>
+                            <div class="form-group">
+                                <div class="float-end">
+                                    <button class="btn btn-success waves-effect waves-light"> <i class="mdi mdi-form-textbox-password mdi-18px"></i> Update </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end tab -->
+        </div>
+    </div>
+    <!-- Column -->
+    
+</div>
+<!-- Row -->
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <style>
+                .drag-image {
+                    margin: auto;
+                    border: 1px dashed rgb(117, 226, 245);
+                    height: 350px;
+                    width: 350px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    flex-direction: column;
+                }
+                
+                .drag-image.active {
+                    border: 2px solid rgb(65, 102, 224);
+                }
+                
+                .outer-drag-image img {
+                    height: 100%;
+                    width: 100%;
+                    object-fit: cover;
+                    border-radius: 5px;
+                }
+            </style>
+
+            <form action="updateDp" method="POST" id="update-dp" enctype="multipart/form-data" class="text-center">
+                {% csrf_token %}
+                <div class="outer-drag-image">
+                    <div class="drag-image">
+                        <div class="icon"><i class="mdi mdi-cloud-upload mdi-48px"></i></div>
+                        <h6> Drag & Drop File Here </h6> 
+                        <span> OR </span> 
+                        <label id="load-image" class="btn btn-primary waves-effect waves-light"> Browse File </label> 
+                    </div>
+                    <input type="file" name="avata" id="input-file-image" hidden required>
+                </div>
+            </form>
+
+            <div class="modal-footer">
+                <button type="submit" form="update-dp" name="reset_dp" class="btn btn-sm waves-effect waves-light btn-secondary" data-bs-dismiss="modal"> <i class="mdi mdi-account-cancel mdi-24px"></i> Resert </button>
+                <button type="submit" form="update-dp" name="update_dp" class="btn btn-sm waves-effect waves-light btn-success"> <i class="mdi mdi-account-check mdi-24px"></i> Upload </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}   
+
+{% block 'addedScripts' %} 
+<script src="{% static 'plugins/inputmask/jquery.inputmask.bundle.js' %}"></script>
+<script src="{% static 'js/inputmask.js' %}"></script>
+<script>
+    const dropArea = document.querySelector(".outer-drag-image"),
+    dragText = dropArea.querySelector("h6"),
+    button = dropArea.querySelector("#load-image"),
+    input = dropArea.querySelector("#input-file-image");
+    let file;
+
+    //link button with input file 
+    button.onclick = ()=>{
+        input.click();
+    }
+
+    input.addEventListener("change", function(){
+        file = this.files[0];
+        dropArea.classList.add("active");
+        viewfile();
+    });
+
+    dropArea.addEventListener("dragover", (event)=>{
+        event.preventDefault();
+        dropArea.classList.add("active");
+        dragText.textContent = "Release to Upload File";
+    });
+
+    dropArea.addEventListener("dragleave", ()=>{
+        dropArea.classList.remove("active");
+        dragText.textContent = "Drag & Drop to Upload File";
+    });
+
+    dropArea.addEventListener("drop", (event)=>{
+        event.preventDefault();
+        file = event.dataTransfer.files[0];
+        viewfile();
+    });
+
+    function viewfile(){
+        let fileType = file.type;
+        let validExtensions = ["image/jpeg", "image/jpg", "image/png"];
+        if(validExtensions.includes(fileType)){
+            let fileReader = new FileReader();
+            fileReader.onload = ()=>{
+                let fileURL = fileReader.result;
+                let imgTag = `<img src="${fileURL}" alt="image">`;
+                document.querySelector(".drag-image").innerHTML = imgTag;
+            }
+        fileReader.readAsDataURL(file);
+        }
+        else{
+            alert("This is not an Image File!");
+            dropArea.classList.remove("active");
+            dragText.textContent = "Drag & Drop to Upload File";
+        }
+    }
+</script>
+{% endblock%}   

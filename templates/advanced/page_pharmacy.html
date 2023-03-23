@@ -1,0 +1,58 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+
+{% block 'preload' %} PMS {% endblock %}
+    
+{% block 'bigHead' %} Setting / <span style="color: #687384;"> Phamarcy details </span> {% endblock %}
+
+{% block 'main' %}
+{% if user.title == 'owner' %}
+    {% if pharmacy_values|length < 1 %}
+    <div class="row">
+        <div class="card shadow-sm col-sm-8 col-md-8 col-lg-8">
+            <div class="card-body">
+                <form action="addPharmacy" method="GET" class="form-horizontal form-material">
+                    <div class="form-group">
+                        <label class="col-form-label"> Phamarcy name <span>*</span></label>
+                        <input type="text" name="name" id="Cname" class="form-control" onchange="upperCaseCompany()" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label"> Address <span>*</span></label>
+                        <textarea name="address" class="form-control" required></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary float-end"> <i class="mdi mdi-plus-bold"></i> Add </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endif %}
+
+{% for instance in pharmacy_values %}
+    <div class="row">
+        <div class="card shadow-sm col-sm-8 col-md-8 col-lg-8">
+            <div class="card-body">
+                <form class="form-horizontal form-material" action="updPharmacy" method="GET">
+                    <input type="hidden" value="{{ instance.id }}" name="id" class="form-control">
+                    <div class="form-group">
+                        <label class="col-form-label"> Phamarcy name </label>
+                        <input type="text" name="name" value="{{ instance.name }}" class="form-control"  onchange="upperCaseCompany()" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-form-label"> Address </label>
+                        <textarea class="form-control" name="address" placeholder="{{ instance.location }}" required></textarea>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-success mx-2 float-end"> <i class="mdi mdi-check-bold"></i> Update </button>
+                        {% if user.title == 'owner' %}
+                        <a href="delPharmacy/{{instance.id}}" class="btn btn-danger float-end"> <i class="mdi mdi-bin"></i> Delete </a>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+{% endblock %}
